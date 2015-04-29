@@ -1,5 +1,6 @@
 %%% The state domain, D, on which this operation applies is the set of intervals
 %%% which are either positive or negative
+%%% test
 
 %%% Associative in D - {0}
 %%% Not associative in D. Ex: (2 x -1) x 0 not equal to 2 x (-1 x 0)
