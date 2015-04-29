@@ -1,0 +1,54 @@
+
+ AGENT Sos
+
+Agent: Sos ; Sites: x
+Sos(x!Shc.b)
+Sos(x!EGFR.a)
+Sos(x)
+
+
+
+ AGENT Shc
+
+Agent: Shc ; Sites: a,b
+Shc(a!EGFR.b,b!Sos.x)
+Shc(a,b!Sos.x)
+Shc(a!EGFR.b,b)
+Shc(a,b)
+
+
+Agent: Shc ; Sites: a
+Shc(a!EGFR.b)
+Shc(a)
+
+
+
+ AGENT EGFR
+
+Agent: EGFR ; Sites: l
+EGFR(l!EGF.r)
+EGFR(l)
+
+
+Agent: EGFR ; Sites: b,l
+EGFR(b!Shc.a,l!EGF.r)
+EGFR(b,l!EGF.r)
+EGFR(b!Shc.a,l)
+EGFR(b,l)
+
+
+Agent: EGFR ; Sites: a,l
+EGFR(a!Sos.x,l!EGF.r)
+EGFR(a,l!EGF.r)
+EGFR(a!Sos.x,l)
+EGFR(a,l)
+
+
+
+ AGENT EGF
+
+Agent: EGF ; Sites: r
+EGF(r!EGFR.l)
+EGF(r)
+
+

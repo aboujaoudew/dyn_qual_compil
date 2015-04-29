@@ -1,0 +1,45 @@
+####### SMALL EGFR MODEL ########
+
+#former rule:
+#'r1' EGF(r!1),EGFR(l!1) -> EGF(r),EGFR(l)
+#simplified  rule:
+ 'r1' EGFR(l!_)->EGFR(l) @ 1 #1.1
+
+#former rule:
+#'r2' EGF(r),EGFR(l) -> EGF(r!1),EGFR(l!1)
+#simplified  rule:
+ 'r2' EGF(r),EGFR(l)->EGF(r!1),EGFR(l!1) @ 1 #2
+
+#former rule:
+#'r3' EGFR(a,l!_),Sos(x) -> EGFR(a!1,l!_),Sos(x!1)
+#simplified  rule:
+ 'r3' EGFR(a,l!_),Sos(x)->EGFR(a!1,l!_),Sos(x!1) @ 1 #3
+
+#former rule:
+#'r4' EGFR(a!_) -> EGFR(a)
+#simplified  rule:
+ 'r4' EGFR(a!_)->EGFR(a) @ 1 #4
+
+#former rule:
+#'r5' EGFR(b,l!_),Shc(a) -> EGFR(b!1,l!_),Shc(a!1)
+#simplified  rule:
+ 'r5' EGFR(b,l!_),Shc(a)->EGFR(b!1,l!_),Shc(a!1) @ 1 #5
+
+#former rule:
+#'r6' EGFR(b!_) -> EGFR(b)
+#simplified  rule:
+ 'r6' EGFR(b!_)->EGFR(b) @ 1 #6
+
+#former rule:
+#'r7' EGFR(b!1,l!_),Shc(a!1,b),Sos(x) -> EGFR(b!2,l!_),Shc(a!2,b!1),Sos(x!1)
+#simplified  rule:
+ 'r7' Shc(a!1,b),Sos(x),EGFR(b!1,l!_)->Shc(a!2,b!1),Sos(x!1),EGFR(b!2,l!_) @ 1 #7
+
+#former rule:
+#'r8' Shc(b!_) -> Shc(b)
+#simplified  rule:
+ 'r8' Shc(b!_)->Shc(b) @ 1 #8
+
+%init: EGFR(a,b,l),Sos(x),Shc(a,b),EGF(r)
+
+

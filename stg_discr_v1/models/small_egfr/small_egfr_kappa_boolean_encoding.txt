@@ -1,0 +1,409 @@
+Boolean encoding:
+
+Species: Sos,Shc,EGFR,EGF
+
+Marks: 
+
+The (BNG)-dot operator is not used.
+
+interface:
+
+Agent: Sos
+Markable sites: 
+Linkable sites: x
+
+Agent: Shc
+Markable sites: 
+Linkable sites: b,a
+
+Agent: EGFR
+Markable sites: 
+Linkable sites: l,b,a
+
+Agent: EGF
+Markable sites: 
+Linkable sites: r
+
+
+Interface of agents:
+
+AGENT Sos:
+Markable sites: 
+Linkable sites: x;
+AGENT Shc:
+Markable sites: 
+Linkable sites: b;a;
+AGENT EGFR:
+Markable sites: 
+Linkable sites: l;b;a;
+AGENT EGF:
+Markable sites: 
+Linkable sites: r;
+
+Contact map:
+EGF.r-l.EGFR
+EGFR.a-x.Sos
+EGFR.b-a.Shc
+Shc.b-x.Sos
+
+
+Boolean for links: l(Shc.b,Sos.x);l(EGFR.b,Shc.a);l(EGFR.a,Sos.x);l(EGF.r,EGFR.l);
+links: EGF.r-l.EGFR;EGFR.a-x.Sos;EGFR.b-a.Shc;Shc.b-x.Sos;
+RULES:
+Rule Class: 
+
+SPECIES:
+Shc,Shc;
+SPECIE->ID:
+Shc:Shc
+ID->SPECIE:
+Shc:Shc
+B_OF_SITES:
+Shc.a.l: AL(Shc.a,EGFR.b)
+Shc.b.l: AL(Shc.b,Sos.x)
+B_OF_BINDING:
+
+Passive:
+GUARD:
+LABEL: r8
+SUPPORT: Shc, 
+Shc.b.l:true
+Here(ShcShc):true
+
+
+Alias:CONTEXTUAL_CONTROL:
+Shc.b.l:false
+UNCONTEXTUAL_CONTROL:
+Break 1/2 line Shc.b
+VARIABLES:
+Here(ShcShc),Shc.b.l,AL(Shc.b,Sos.x),
+Rule Class: 
+
+SPECIES:
+EGFR,EGFR;
+Sos,Sos;
+Shc,Shc;
+SPECIE->ID:
+EGFR:EGFR
+Shc:Shc
+Sos:Sos
+ID->SPECIE:
+EGFR:EGFR
+Shc:Shc
+Sos:Sos
+B_OF_SITES:
+EGFR.a.l: AL(EGFR.a,Sos.x)
+EGFR.b.l: AL(EGFR.b,Shc.a)
+EGFR.l.l: AL(EGFR.l,EGF.r)
+Shc.a.l: AL(Shc.a,EGFR.b)
+Shc.b.l: AL(Shc.b,Sos.x)
+Sos.x.l: AL(Sos.x,EGFR.a),AL(Sos.x,Shc.b)
+B_OF_BINDING:
+AL(EGFR.a,Sos.x): l(EGFR.a,Sos.x)
+AL(EGFR.b,Shc.a): l(EGFR.b,Shc.a)
+AL(Shc.a,EGFR.b): l(EGFR.b,Shc.a)
+AL(Shc.b,Sos.x): l(Shc.b,Sos.x)
+AL(Sos.x,EGFR.a): l(EGFR.a,Sos.x)
+AL(Sos.x,Shc.b): l(Shc.b,Sos.x)
+
+Passive:(EGFR,EGFR,b)<-(Shc,Shc,a);
+
+GUARD:
+LABEL: r7
+SUPPORT: Shc, Sos, 
+Sos.x.l:false
+Here(SosSos):true
+Shc.b.l:false
+Here(ShcShc):true
+EGFR.l.l:true
+Here(EGFREGFR):true
+l(EGFR.b,Shc.a):true
+EGFR.b.l:true
+Shc.a.l:true
+
+
+Alias:CONTEXTUAL_CONTROL:
+Sos.x.l:true
+Shc.b.l:true
+l(Shc.b,Sos.x):true
+AL(Sos.x,Shc.b):true
+AL(Shc.b,Sos.x):true
+UNCONTEXTUAL_CONTROL:
+VARIABLES:
+Here(EGFREGFR),Here(ShcShc),Here(SosSos),EGFR.b.l,EGFR.l.l,Shc.a.l,Shc.b.l,Sos.x.l,l(EGFR.b,Shc.a),l(Shc.b,Sos.x),AL(EGFR.b,Shc.a),AL(EGFR.l,EGF.r),AL(Shc.a,EGFR.b),AL(Shc.b,Sos.x),AL(Sos.x,EGFR.a),AL(Sos.x,Shc.b),
+Rule Class: 
+
+SPECIES:
+EGFR,EGFR;
+SPECIE->ID:
+EGFR:EGFR
+ID->SPECIE:
+EGFR:EGFR
+B_OF_SITES:
+EGFR.a.l: AL(EGFR.a,Sos.x)
+EGFR.b.l: AL(EGFR.b,Shc.a)
+EGFR.l.l: AL(EGFR.l,EGF.r)
+B_OF_BINDING:
+
+Passive:
+GUARD:
+LABEL: r6
+SUPPORT: EGFR, 
+EGFR.b.l:true
+Here(EGFREGFR):true
+
+
+Alias:CONTEXTUAL_CONTROL:
+EGFR.b.l:false
+UNCONTEXTUAL_CONTROL:
+Break 1/2 line EGFR.b
+VARIABLES:
+Here(EGFREGFR),EGFR.b.l,AL(EGFR.b,Shc.a),
+Rule Class: 
+
+SPECIES:
+Shc,Shc;
+EGFR,EGFR;
+SPECIE->ID:
+EGFR:EGFR
+Shc:Shc
+ID->SPECIE:
+EGFR:EGFR
+Shc:Shc
+B_OF_SITES:
+EGFR.a.l: AL(EGFR.a,Sos.x)
+EGFR.b.l: AL(EGFR.b,Shc.a)
+EGFR.l.l: AL(EGFR.l,EGF.r)
+Shc.a.l: AL(Shc.a,EGFR.b)
+Shc.b.l: AL(Shc.b,Sos.x)
+B_OF_BINDING:
+AL(EGFR.b,Shc.a): l(EGFR.b,Shc.a)
+AL(Shc.a,EGFR.b): l(EGFR.b,Shc.a)
+
+Passive:
+GUARD:
+LABEL: r5
+SUPPORT: EGFR, Shc, 
+Shc.a.l:false
+Here(ShcShc):true
+EGFR.b.l:false
+EGFR.l.l:true
+Here(EGFREGFR):true
+
+
+Alias:CONTEXTUAL_CONTROL:
+EGFR.b.l:true
+Shc.a.l:true
+l(EGFR.b,Shc.a):true
+AL(EGFR.b,Shc.a):true
+AL(Shc.a,EGFR.b):true
+UNCONTEXTUAL_CONTROL:
+VARIABLES:
+Here(EGFREGFR),Here(ShcShc),EGFR.b.l,EGFR.l.l,Shc.a.l,l(EGFR.b,Shc.a),AL(EGFR.b,Shc.a),AL(EGFR.l,EGF.r),AL(Shc.a,EGFR.b),
+Rule Class: 
+
+SPECIES:
+EGFR,EGFR;
+SPECIE->ID:
+EGFR:EGFR
+ID->SPECIE:
+EGFR:EGFR
+B_OF_SITES:
+EGFR.a.l: AL(EGFR.a,Sos.x)
+EGFR.b.l: AL(EGFR.b,Shc.a)
+EGFR.l.l: AL(EGFR.l,EGF.r)
+B_OF_BINDING:
+
+Passive:
+GUARD:
+LABEL: r4
+SUPPORT: EGFR, 
+EGFR.a.l:true
+Here(EGFREGFR):true
+
+
+Alias:CONTEXTUAL_CONTROL:
+EGFR.a.l:false
+UNCONTEXTUAL_CONTROL:
+Break 1/2 line EGFR.a
+VARIABLES:
+Here(EGFREGFR),EGFR.a.l,AL(EGFR.a,Sos.x),
+Rule Class: 
+
+SPECIES:
+Sos,Sos;
+EGFR,EGFR;
+SPECIE->ID:
+EGFR:EGFR
+Sos:Sos
+ID->SPECIE:
+EGFR:EGFR
+Sos:Sos
+B_OF_SITES:
+EGFR.a.l: AL(EGFR.a,Sos.x)
+EGFR.b.l: AL(EGFR.b,Shc.a)
+EGFR.l.l: AL(EGFR.l,EGF.r)
+Sos.x.l: AL(Sos.x,EGFR.a),AL(Sos.x,Shc.b)
+B_OF_BINDING:
+AL(EGFR.a,Sos.x): l(EGFR.a,Sos.x)
+AL(Sos.x,EGFR.a): l(EGFR.a,Sos.x)
+
+Passive:
+GUARD:
+LABEL: r3
+SUPPORT: EGFR, Sos, 
+Sos.x.l:false
+Here(SosSos):true
+EGFR.a.l:false
+EGFR.l.l:true
+Here(EGFREGFR):true
+
+
+Alias:CONTEXTUAL_CONTROL:
+Sos.x.l:true
+EGFR.a.l:true
+l(EGFR.a,Sos.x):true
+AL(Sos.x,EGFR.a):true
+AL(EGFR.a,Sos.x):true
+UNCONTEXTUAL_CONTROL:
+VARIABLES:
+Here(EGFREGFR),Here(SosSos),EGFR.a.l,EGFR.l.l,Sos.x.l,l(EGFR.a,Sos.x),AL(EGFR.a,Sos.x),AL(EGFR.l,EGF.r),AL(Sos.x,EGFR.a),AL(Sos.x,Shc.b),
+Rule Class: 
+
+SPECIES:
+EGFR,EGFR;
+EGF,EGF;
+SPECIE->ID:
+EGF:EGF
+EGFR:EGFR
+ID->SPECIE:
+EGF:EGF
+EGFR:EGFR
+B_OF_SITES:
+EGF.r.l: AL(EGF.r,EGFR.l)
+EGFR.a.l: AL(EGFR.a,Sos.x)
+EGFR.b.l: AL(EGFR.b,Shc.a)
+EGFR.l.l: AL(EGFR.l,EGF.r)
+B_OF_BINDING:
+AL(EGF.r,EGFR.l): l(EGF.r,EGFR.l)
+AL(EGFR.l,EGF.r): l(EGF.r,EGFR.l)
+
+Passive:
+GUARD:
+LABEL: r2
+SUPPORT: EGF, EGFR, 
+EGFR.l.l:false
+Here(EGFREGFR):true
+EGF.r.l:false
+Here(EGFEGF):true
+
+
+Alias:CONTEXTUAL_CONTROL:
+EGF.r.l:true
+EGFR.l.l:true
+l(EGF.r,EGFR.l):true
+AL(EGF.r,EGFR.l):true
+AL(EGFR.l,EGF.r):true
+UNCONTEXTUAL_CONTROL:
+VARIABLES:
+Here(EGFEGF),Here(EGFREGFR),EGF.r.l,EGFR.l.l,l(EGF.r,EGFR.l),AL(EGF.r,EGFR.l),AL(EGFR.l,EGF.r),
+Rule Class: 
+
+SPECIES:
+EGF,EGF;
+EGFR,EGFR;
+SPECIE->ID:
+EGF:EGF
+EGFR:EGFR
+ID->SPECIE:
+EGF:EGF
+EGFR:EGFR
+B_OF_SITES:
+EGF.r.l: AL(EGF.r,EGFR.l)
+EGFR.a.l: AL(EGFR.a,Sos.x)
+EGFR.b.l: AL(EGFR.b,Shc.a)
+EGFR.l.l: AL(EGFR.l,EGF.r)
+B_OF_BINDING:
+AL(EGF.r,EGFR.l): l(EGF.r,EGFR.l)
+AL(EGFR.l,EGF.r): l(EGF.r,EGFR.l)
+
+Passive:(EGF,EGF,r)<-(EGFR,EGFR,l);
+
+GUARD:
+LABEL: r1 (clone)
+SUPPORT: EGF, EGFR, 
+Here(EGFREGFR):true
+Here(EGFEGF):true
+l(EGF.r,EGFR.l):true
+EGF.r.l:true
+EGFR.l.l:true
+
+
+Alias:CONTEXTUAL_CONTROL:
+EGFR.l.l:false
+EGF.r.l:false
+l(EGF.r,EGFR.l):false
+AL(EGF.r,EGFR.l):false
+AL(EGFR.l,EGF.r):false
+UNCONTEXTUAL_CONTROL:
+VARIABLES:
+Here(EGFEGF),Here(EGFREGFR),EGF.r.l,EGFR.l.l,l(EGF.r,EGFR.l),AL(EGF.r,EGFR.l),AL(EGFR.l,EGF.r),
+Rule Class: 
+
+SPECIES:
+EGFR,EGFR;
+EGF,EGF;
+SPECIE->ID:
+EGF:EGF
+EGFR:EGFR
+ID->SPECIE:
+EGF:EGF
+EGFR:EGFR
+B_OF_SITES:
+EGF.r.l: AL(EGF.r,EGFR.l)
+EGFR.a.l: AL(EGFR.a,Sos.x)
+EGFR.b.l: AL(EGFR.b,Shc.a)
+EGFR.l.l: AL(EGFR.l,EGF.r)
+B_OF_BINDING:
+AL(EGF.r,EGFR.l): l(EGF.r,EGFR.l)
+AL(EGFR.l,EGF.r): l(EGF.r,EGFR.l)
+
+Passive:(EGFR,EGFR,l)<-(EGF,EGF,r);
+
+GUARD:
+LABEL: r1
+SUPPORT: EGF, EGFR, 
+Here(EGFREGFR):true
+Here(EGFEGF):true
+l(EGF.r,EGFR.l):true
+EGF.r.l:true
+EGFR.l.l:true
+
+
+Alias:CONTEXTUAL_CONTROL:
+EGFR.l.l:false
+EGF.r.l:false
+l(EGF.r,EGFR.l):false
+AL(EGF.r,EGFR.l):false
+AL(EGFR.l,EGF.r):false
+UNCONTEXTUAL_CONTROL:
+VARIABLES:
+Here(EGFEGF),Here(EGFREGFR),EGF.r.l,EGFR.l.l,l(EGF.r,EGFR.l),AL(EGF.r,EGFR.l),AL(EGFR.l,EGF.r),
+Rule Flags:
+
+1: r1
+2: r2
+3: r3
+4: r4
+5: r5
+6: r6
+7: r7
+8: r8
+
+Initial state:
+
+EGFR: Here(EGFREGFR):true
+Sos: Here(SosSos):true
+Shc: Here(ShcShc):true
+EGF: Here(EGFEGF):true
+

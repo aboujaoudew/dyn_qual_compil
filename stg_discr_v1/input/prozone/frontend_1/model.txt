@@ -1,0 +1,4 @@
+A + B -> AB
+B + C -> BC
+AB + C -> ABC
+A + BC -> ABC

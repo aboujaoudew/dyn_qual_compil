@@ -1,0 +1,8 @@
+####### PROZONE MODEL ########
+
+'a.b' B(x1),A(y) -> B(x1!1),A(y!1)
+'b.c' B(x2),C(z) -> B(x2!1),C(z!1)
+
+%init: B(x1,x2),A(y),C(z)
+
+

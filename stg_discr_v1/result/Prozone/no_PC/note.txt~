@@ -1,0 +1,5 @@
+Impact sur la dynamique: cas où ci=212000
+
+-> l'état 202001 n'est plus stable. le système admet l'attracteur cyclique complexe suivant: 
+202001 <-> 202101 <-> 202111 <-> 202011 <-> 202001 
+ 

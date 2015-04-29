@@ -1,0 +1,8 @@
+l(EGF.r,EGFR.l)
+l(EGFR.a,Sos.x)
+l(EGFR.b,Shc.a)
+l(EGF.r,EGFR.l)
+l(EGFR.b,Shc.a)
+l(Shc.b,Sos.x)
+l(Shc.b,Sos.x)
+l(EGFR.a,Sos.x)

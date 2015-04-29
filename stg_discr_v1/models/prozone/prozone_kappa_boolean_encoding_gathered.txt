@@ -1,0 +1,146 @@
+Boolean encoding:
+
+Species: C,B,A
+
+Marks: 
+
+The (BNG)-dot operator is not used.
+
+interface:
+
+Agent: C
+Markable sites: 
+Linkable sites: z
+
+Agent: B
+Markable sites: 
+Linkable sites: x2,x1
+
+Agent: A
+Markable sites: 
+Linkable sites: y
+
+
+Interface of agents:
+
+AGENT C:
+Markable sites: 
+Linkable sites: z;
+AGENT B:
+Markable sites: 
+Linkable sites: x2;x1;
+AGENT A:
+Markable sites: 
+Linkable sites: y;
+
+Contact map:
+A.y-x1.B
+B.x2-z.C
+
+
+Boolean for links: l(B.x2,C.z);l(A.y,B.x1);
+links: A.y-x1.B;B.x2-z.C;
+RULES:
+Rule Class: 
+
+SPECIES:
+C,C;
+B,B;
+SPECIE->ID:
+B:B
+C:C
+ID->SPECIE:
+B:B
+C:C
+B_OF_SITES:
+B.x1.l: AL(B.x1,A.y)
+B.x2.l: AL(B.x2,C.z)
+C.z.l: AL(C.z,B.x2)
+B_OF_BINDING:
+AL(B.x2,C.z): l(B.x2,C.z)
+AL(C.z,B.x2): l(B.x2,C.z)
+
+Passive:
+GUARD:
+LABEL: b.c
+SUPPORT: B, C, 
+C.z.l:false
+Here(CC):true
+B.x2.l:false
+Here(BB):true
+
+
+Alias:LABEL: b.c (clone)
+SUPPORT: B, C, 
+C.z.l:false
+Here(CC):true
+B.x2.l:false
+Here(BB):true
+
+
+Alias:CONTEXTUAL_CONTROL:
+C.z.l:true
+B.x2.l:true
+l(B.x2,C.z):true
+AL(C.z,B.x2):true
+AL(B.x2,C.z):true
+UNCONTEXTUAL_CONTROL:
+VARIABLES:
+Here(BB),Here(CC),B.x2.l,C.z.l,l(B.x2,C.z),AL(B.x2,C.z),AL(C.z,B.x2),
+Rule Class: 
+
+SPECIES:
+B,B;
+A,A;
+SPECIE->ID:
+A:A
+B:B
+ID->SPECIE:
+A:A
+B:B
+B_OF_SITES:
+A.y.l: AL(A.y,B.x1)
+B.x1.l: AL(B.x1,A.y)
+B.x2.l: AL(B.x2,C.z)
+B_OF_BINDING:
+AL(A.y,B.x1): l(A.y,B.x1)
+AL(B.x1,A.y): l(A.y,B.x1)
+
+Passive:
+GUARD:
+LABEL: a.b
+SUPPORT: A, B, 
+A.y.l:false
+Here(AA):true
+B.x1.l:false
+Here(BB):true
+
+
+Alias:LABEL: a.b (clone)
+SUPPORT: A, B, 
+A.y.l:false
+Here(AA):true
+B.x1.l:false
+Here(BB):true
+
+
+Alias:CONTEXTUAL_CONTROL:
+A.y.l:true
+B.x1.l:true
+l(A.y,B.x1):true
+AL(A.y,B.x1):true
+AL(B.x1,A.y):true
+UNCONTEXTUAL_CONTROL:
+VARIABLES:
+Here(AA),Here(BB),A.y.l,B.x1.l,l(A.y,B.x1),AL(A.y,B.x1),AL(B.x1,A.y),
+Rule Flags:
+
+1: a.b
+2: b.c
+
+Initial state:
+
+B: Here(BB):true
+A: Here(AA):true
+C: Here(CC):true
+

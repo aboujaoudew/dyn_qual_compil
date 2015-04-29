@@ -1,0 +1,16 @@
+####### PROZONE MODEL ########
+
+#former rule:
+#'a.b' B(x1),A(y) -> B(x1!1),A(y!1)
+#simplified  rule:
+ 'a.b' A(y),B(x1)->A(y!1),B(x1!1) @ 1 #1
+#former rule:
+#'b.c' B(x2),C(z) -> B(x2!1),C(z!1)
+#simplified  rule:
+ 'b.c' B(x2),C(z)->B(x2!1),C(z!1) @ 1 #2
+
+%init: B(x1,x2),A(y),C(z)
+
+
+
+

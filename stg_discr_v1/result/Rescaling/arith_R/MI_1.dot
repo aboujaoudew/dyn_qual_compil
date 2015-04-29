@@ -1,0 +1,24 @@
+digraph G{
+
+{node_1 [label="000"];
+node_2 [label="001"];
+node_3 [label="010"];
+node_4 [label="011"];
+node_5 [label="100"];
+node_6 [label="101"];
+node_7 [label="110"];
+node_8 [label="111"];
+}
+node_1->node_3[penwidth=1]
+node_1->node_2[penwidth=1]
+node_2->node_4[penwidth=1]
+node_3->node_4[penwidth=1]
+node_5->node_1[penwidth=1]
+node_5->node_6[penwidth=1]
+node_5->node_2[penwidth=1]
+node_6->node_2[penwidth=1]
+node_7->node_3[penwidth=1]
+node_7->node_8[penwidth=1]
+node_7->node_4[penwidth=1]
+node_8->node_4[penwidth=1]
+}
