@@ -155,11 +155,16 @@ MI = num2cell(MI);
 %%% Loading of the number of samplibg intervals and of the reaction rates
 %==========================================================================
 
-nb_val = load(strcat(file,'nb_sampl_interv.txt'));
+nb_val = load(strcat(file,'reaction_rates.txt'));
+%--------------------------------------------------------------------------
+%%Kinetic constants of the reactions (kin(i) associated to v(i))
+%kin = [0, 4]; % for the rescaling
+%kin = [0, 0, 4, 0]; % for the reversible rescaling
+%kin = [0, 0, 0, 0]; % for the prozone
+%kin = [0, 0, 0, 0, 0, 0, 0, 0]; % for the reversible prozone
+%--------------------------------------------------------------------------
 
 kin = load(strcat(file,'reaction_rates.txt'));
-
-%--------------------------------------------------------------------------
 
 res.v = v;
 res.var = var;
