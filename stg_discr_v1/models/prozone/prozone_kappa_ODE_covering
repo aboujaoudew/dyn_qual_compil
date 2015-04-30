@@ -1,6 +1,0 @@
-Agent: A
- Covering class: y
-Agent: B
- Covering class: x1, x2
-Agent: C
- Covering class: z

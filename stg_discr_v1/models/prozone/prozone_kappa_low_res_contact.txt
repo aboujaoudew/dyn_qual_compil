@@ -1,4 +1,0 @@
-l(A.y,B.x1)
-l(A.y,B.x1)
-l(B.x2,C.z)
-l(B.x2,C.z)

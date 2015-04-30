@@ -1,8 +1,0 @@
-Agent: EGF
- Covering class: r
-Agent: EGFR
- Covering class: a, b, l
-Agent: Shc
- Covering class: a, b
-Agent: Sos
- Covering class: x

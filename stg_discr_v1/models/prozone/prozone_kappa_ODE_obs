@@ -1,6 +1,0 @@
-%obs:B(x1,x2)
-%obs:A(y)
-%obs:A(y!1),B(x1!1,x2)
-%obs:B(x1,x2!1),C(z!1)
-%obs:A(y!1),B(x1!1,x2!2),C(z!2)
-%obs:C(z)
