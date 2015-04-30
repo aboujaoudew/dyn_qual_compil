@@ -1,7 +1,7 @@
-MAINREP=tool/
-MODELREP=$(MAINREP)input/
+MAINREP=main/
+MODELREP=case_studies/
 EXAMPLES=$(notdir $(wildcard $(MODELREP)*))
-OUTPUTREP=$(MAINREP)result/
+OUTPUTREP=$(wildcard $(MODELREP)*/output_files)
 DOT=$(wildcard $(OUTPUTREP)*/*.dot)
 PDF=$(DOT:%.dot=%.pdf)
 
@@ -15,12 +15,17 @@ all: $(EXAMPLES)
 models: $(EXAMPLES)
 pdf: $(PDF)
 
-%: $(MODELREP)%
+%/output_files:
+	mkdir $@
+
+%: $(MODELREP)% $(MODELREP)%/output_files
 	cd $(MAINREP) ; rm -rf tmp.m ; echo "frontend('$@')" > tmp.m ; $(MATLAB) tmp.m 
 
 %.pdf: %.dot
 	$(DOTENGINE) -Tpdf $< -o $@
 
+clean:
+	rm -rf $(OUTPUTREP)
 help:
 	@echo make: compile all the models and generate the corresponfing pdf
 	@echo make models: compile all models
