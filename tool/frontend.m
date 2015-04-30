@@ -153,15 +153,15 @@ MI = num2cell(MI);
 
 %--------------------------------------------------------------------------
 % Nombre de valeur (p)
-%nb_val = 4; %prozone
-nb_val = 2; %rescaling
+nb_val = 2; %prozone
+%nb_val = 2; %rescaling
 %--------------------------------------------------------------------------
 
 %--------------------------------------------------------------------------
 %%Kinetic constants of the reactions (kin(i) associated to v(i))
-kin = [0, 4]; % for the rescaling
+%kin = [0, 4]; % for the rescaling
 %kin = [0, 0, 4, 0]; % for the reversible rescaling
-%kin = [0, 0, 0, 0]; % for the prozone
+kin = [0, 0, 0, 0]; % for the prozone
 %kin = [0, 0, 0, 0, 0, 0, 0, 0]; % for the reversible prozone
 %--------------------------------------------------------------------------
 

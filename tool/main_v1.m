@@ -1,6 +1,6 @@
 %%% In this version, we take into account the time scale separation
 %%% constraint without lattence.
-%%% We take into account the constraints from the mass invariants.
+%%% We take into account the constraints of the mass invariants.
 %%% The updating policy is the full asynchronous policy (i.e. we take into account all types of updatings).
 %%% WE IMPLEMENTED A FIRST VERSION FOR THE UPWARDS INTERVAL CROSSING CONSTRAINT WHICH HAS TO BE
 %%% UPDATED.
@@ -102,22 +102,23 @@ etat = cell2mat(x)
 %Computation of the variables which are a product of a rule and a reactant
 %of another (or the same) rule. This will be used in the computation of the
 %interval crossing constraint
+
+%Determination of the reactants and product indeces
 reac_ind = []; prod_ind = [];
 for i = 1: length(v)
-    mcr = mass_constr_reac(x,v{i},nb_val);
-    MCR_prod = mcr.prod; % MCR_prod(:,1): index of the product variables - MCR_prod(:,2): associated born
-    MCR_reac = mcr.reac; % MCR_reac(:,1): index of the reactant variables - MCR_reac(:,2): associated born
-    
-    %Reactants and product indeces of reaction v(i)
-    a = MCR_reac(:,1);
-    b = MCR_prod(:,1);
-    
-    reac_ind = [reac_ind a];
-    prod_ind = [prod_ind b];
+    v_i = v{i};
+    for j = 1:length(v_i)
+        if v_i(j) < 0
+            reac_ind = [reac_ind abs(v_i(j))];
+        elseif v_i(j) > 0
+            prod_ind = [prod_ind v_i(j)];        
+        end   
+    end
 end
 reac_ind = unique(reac_ind);
 prod_ind = unique(prod_ind);
 intersec_reac_prod = intersect(reac_ind, prod_ind);
+
 %--------------------------------------------------------------------------
 
 for i = 1: length(v) % loop on the reactions
@@ -125,8 +126,7 @@ for i = 1: length(v) % loop on the reactions
     
     reaction = v{i};
     y = cell2mat(x);
-
-    %%%====================================================================
+    
     %Full asynchronous updating
     a = v{i};
     v_uniq = unique(a','rows');

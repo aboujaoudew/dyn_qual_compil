@@ -1,20 +1,16 @@
-%%% In this version, we implemented the updating scheme by scheduling the
+%%% In this version, we take into account the time scale separation
+%%% constraint without lattence.
+%%% We take into account the constraints of the mass invariants.
+%%% The updating policy is the full asynchronous policy (i.e. we take into account all types of updatings).
+%%% WE IMPLEMENTED A FIRST VERSION FOR THE UPWARDS INTERVAL CROSSING CONSTRAINT WHICH HAS TO BE
+%%% UPDATED.
 
-%%% reactions according to their time scale (priority classes). 
-
-%%% We take into account the constraints from the mass invariants
-
-%%% The updating policy is the full asynchronous policy.
-
-%%% We introduce the number of values as a parameter (nb_val), and kinetic
-%%% constants for reactions (kin)
-%%% WE SUPPRESS THE BORN TO THE DERIVATIVE CONSTRAINT AND IMPLEMENTED
-%%% INSTEAD THE INTERVAL CROSSING CONSTRAINT (TO UPDATE!)
-
-%%%INPUTS
+%%% INPUTS
 %%% v: vector of reactions
 %%% ci: vector of initial conditions
 %%% MMI_sign: matrix of mass invariants
+%%% kin: vector of reaction rates
+%%% nb_val: number of sampling intervals
 
 function res = main_v1(ci,MMI_sign,v,kin,nb_val)
 
@@ -106,18 +102,36 @@ etat = cell2mat(x)
 %Computation of the variables which are a product of a rule and a reactant
 %of another (or the same) rule. This will be used in the computation of the
 %interval crossing constraint
+
+%Determination of the reactants and product indeces
 reac_ind = []; prod_ind = [];
+    if v(i) < 0
+        reac_ind = [reac_ind abs(v(i))];
+    elseif v(i) > 0
+        prod_ind = [prod_ind v(i)];        
+    end
+reac_ind = unique(reac_ind);
+prod_ind = unique(prod_ind);
+intersec_reac_prod = intersect(reac_ind, prod_ind);
+
 for i = 1: length(v)
-    mcr = mass_constr_reac(x,v{i},nb_val);
-    MCR_prod = mcr.prod; % MCR_prod(:,1): index of the product variables - MCR_prod(:,2): associated born
-    MCR_reac = mcr.reac; % MCR_reac(:,1): index of the reactant variables - MCR_reac(:,2): associated born
+    %mcr = mass_constr_reac(x,v{i},nb_val);
+    %MCR_prod = mcr.prod; % MCR_prod(:,1): index of the product variables - MCR_prod(:,2): associated born
+    %MCR_reac = mcr.reac; % MCR_reac(:,1): index of the reactant variables - MCR_reac(:,2): associated born
     
-    %Reactants and product indeces of reaction v(i)
-    a = MCR_reac(:,1);
-    b = MCR_prod(:,1);
+    %%Reactants and product indeces of reaction v(i)
+    %a = MCR_reac(:,1);
+    %b = MCR_prod(:,1);
     
-    reac_ind = [reac_ind a];
-    prod_ind = [prod_ind b];
+    %reac_ind = [reac_ind a];
+    %prod_ind = [prod_ind b];
+            
+    if v(i) < 0
+        reac_ind = [reac_ind abs(v(i))];
+    elseif v(i) > 0
+        prod_ind = [prod_ind v(i)];        
+    end
+    
 end
 reac_ind = unique(reac_ind);
 prod_ind = unique(prod_ind);
