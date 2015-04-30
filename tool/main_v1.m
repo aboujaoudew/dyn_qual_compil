@@ -6,7 +6,7 @@
 %%% We introduce the number of values as a parameter (nb_val), and kinetic
 %%% constants for reactions (kin)
 %%% WE SUPPRESS THE BORN TO THE DERIVATIVE CONSTRAINT AND IMPLEMENTED
-%%% INSTEAD THE INTERVAL CROSSING CONSTRAINT
+%%% INSTEAD THE INTERVAL CROSSING CONSTRAINT (TO UPDATE!)
 
 %%%INPUTS
 %%% v: vector of reactions
@@ -72,7 +72,6 @@ res.ns = ns;
 
 ci = cell2mat(ci);
 
-%save_report(ci,res);
 dot_file(ci,S,P,FP);
 
 function N = invar_check(MI, MMI_sign, x) 

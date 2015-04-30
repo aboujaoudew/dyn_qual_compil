@@ -155,7 +155,6 @@ MI = num2cell(MI);
 % Nombre de valeur (p)
 %nb_val = 4; %prozone
 nb_val = 2; %rescaling
-
 %--------------------------------------------------------------------------
 
 %--------------------------------------------------------------------------
@@ -171,21 +170,7 @@ res.var = var;
 res.i_c = i_c;
 res.MI = MI;
 
-% res = stg_discr_v1(i_c,MI,v);
-% res = stg_discr_v1_interp(i_c,MI,v);
-% a = res.a;
-% a = cell2mat(a);
-% a - ns{1,1}
-% res = stg_discr_v1_no_pc(i_c,MI,v);
-% res = stg_discr_v1_no_pc_mi(i_c,v);
-% res = stg_discr_v1_no_pc_mi_db(i_c,v);
-
-%res = stg_discr_v1(i_c,MI,v,kin,nb_val);
 main_v1(i_c,MI,v,kin,nb_val);
-%res = stg_discr_v1_2(i_c,MI,v,kin);
-
-
-%ns = res.ns;
 
 
 % % Construction of the model from the text file
