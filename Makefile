@@ -9,23 +9,24 @@ DOTENGINE=dot
 MATLAB=matlab
 
 all: $(EXAMPLES)
-	make -C . pdf 
+	@make -C . pdf 
 
 
 models: $(EXAMPLES)
 pdf: $(PDF)
 
 %/output_files:
-	mkdir $@
+	@mkdir $@
 
 %: $(MODELREP)% $(MODELREP)%/output_files
-	cd $(MAINREP) ; rm -rf tmp.m ; echo "frontend('$@')" > tmp.m ; $(MATLAB) tmp.m 
+	@cd $(MAINREP) ; rm -rf tmp.m ; echo "frontend('$@')" > tmp.m ; $(MATLAB) tmp.m 
 
 %.pdf: %.dot
-	$(DOTENGINE) -Tpdf $< -o $@
+	@$(DOTENGINE) -Tpdf $< -o $@
 
 clean:
-	rm -rf $(OUTPUTREP)
+	@rm -rf $(OUTPUTREP)
+
 help:
 	@echo make: compile all the models and generate the corresponfing pdf
 	@echo make models: compile all models
