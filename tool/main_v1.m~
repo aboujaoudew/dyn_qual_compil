@@ -1,16 +1,20 @@
-%%% In this version, we take into account the time scale separation
-%%% constraint without lattence.
-%%% We take into account the constraints from the mass invariants.
-%%% The updating policy is the full asynchronous policy (i.e. we take into account all types of updatings).
-%%% WE IMPLEMENTED A FIRST VERSION FOR THE UPWARDS INTERVAL CROSSING CONSTRAINT WHICH HAS TO BE
-%%% UPDATED.
+%%% In this version, we implemented the updating scheme by scheduling the
 
-%%% INPUTS
+%%% reactions according to their time scale (priority classes). 
+
+%%% We take into account the constraints from the mass invariants
+
+%%% The updating policy is the full asynchronous policy.
+
+%%% We introduce the number of values as a parameter (nb_val), and kinetic
+%%% constants for reactions (kin)
+%%% WE SUPPRESS THE BORN TO THE DERIVATIVE CONSTRAINT AND IMPLEMENTED
+%%% INSTEAD THE INTERVAL CROSSING CONSTRAINT (TO UPDATE!)
+
+%%%INPUTS
 %%% v: vector of reactions
 %%% ci: vector of initial conditions
 %%% MMI_sign: matrix of mass invariants
-%%% kin: vector of reaction rates
-%%% nb_val: number of sampling intervals
 
 function res = main_v1(ci,MMI_sign,v,kin,nb_val)
 

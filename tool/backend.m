@@ -1,4 +1,4 @@
-function dot_file(ci,S,P,FP)
+function backend(ci,S,P,FP)
 
 size_S = size(S);
 a = [];
