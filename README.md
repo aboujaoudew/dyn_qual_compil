@@ -4,7 +4,9 @@ Author: Wassim Abou-Jaoudé
 Date:30 April 2015
 ------------------------------------------------------------------------------------------
 
-We need few days to organize the repository so that the scripts work properly. 
+
+We need few days to organize the repository so that the scripts work properly. Sorry about it. 
+
 
 The following instructions will work soon.
 
