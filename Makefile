@@ -6,7 +6,7 @@ DOT=$(wildcard $(OUTPUTREP)*/*.dot)
 PDF=$(DOT:%.dot=%.pdf)
 
 DOTENGINE=dot
-MATLAB=matlab
+MATLAB=matlab -r 
 
 all: $(EXAMPLES)
 	@make -C . pdf 
