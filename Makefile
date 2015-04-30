@@ -12,6 +12,7 @@ all: $(EXAMPLES)
 	make -C . pdf 
 
 
+models: $(EXAMPLES)
 pdf: $(PDF)
 
 %: $(MODELREP)%
@@ -19,3 +20,10 @@ pdf: $(PDF)
 
 %.pdf: %.dot
 	$(DOTENGINE) -Tpdf $< -o $@
+
+help:
+	@echo make: compile all the models and generate the corresponfing pdf
+	@echo make models: compile all models
+	@echo make pdf: convert each dot file into a pdf file 
+	@echo make prozone: compile the prozone model 
+	@echo make rescaling: compile the model with several time scales
