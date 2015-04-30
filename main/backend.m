@@ -1,11 +1,11 @@
-function backend(ci,S,P,FP)
+function backend(ci,S,P,FP,model)
 
 size_S = size(S);
 a = [];
 for i=1:length(ci)
     a = strcat(a,int2str(ci(i)));
 end
-fid = fopen(strcat('./result/','ci',a,'.dot'), 'wt');
+fid = fopen(strcat('../case_studies/',model,'/output_files/','ci',a,'.dot'), 'wt');
 
 fprintf(fid, '%s\n\n', 'digraph G{');
 fprintf(fid, '%s', '{');
