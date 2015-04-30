@@ -1,4 +1,4 @@
-function frontend_2(model)
+function frontend(model)
 %function res = frontend(model,init_cond,mass_invar)
 
 %file = strcat('.\input\',model,'\');
@@ -7,7 +7,7 @@ file = strcat('./input/',model,'/');
 %%%========================================================================
 %%% Parsing of the model file to extract the reactions
 %%%========================================================================
-fid = fopen(strcat(file,strcat(model),'_kappa_reactions.txt'));
+fid = fopen(strcat(file,strcat(model),'_reactions.txt'));
 v = [];
 %var = [];
 tline = fgetl(fid);
@@ -40,7 +40,7 @@ fclose(fid);
 %%% Parsing of the variablels
 %%%========================================================================
 
-fid = fopen(strcat(file,strcat(model),'_kappa_reactions_alphabet.txt'));
+fid = fopen(strcat(file,strcat(model),'_reactions_alphabet.txt'));
 var = [];
 tline = fgetl(fid);
 while ischar(tline)
@@ -154,7 +154,7 @@ MI = num2cell(MI);
 %--------------------------------------------------------------------------
 % Nombre de valeur (p)
 %nb_val = 4; %prozone
-nb_val = 7; %rescaling
+nb_val = 2; %rescaling
 
 %--------------------------------------------------------------------------
 
@@ -181,7 +181,7 @@ res.MI = MI;
 % res = stg_discr_v1_no_pc_mi_db(i_c,v);
 
 %res = stg_discr_v1(i_c,MI,v,kin,nb_val);
-stg_discr_v1_int_cross(i_c,MI,v,kin,nb_val);
+main_v1(i_c,MI,v,kin,nb_val);
 %res = stg_discr_v1_2(i_c,MI,v,kin);
 
 

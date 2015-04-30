@@ -1,3 +1,0 @@
-A + AB + ABC
-B + AB + BC + ABC
-C + BC + ABC

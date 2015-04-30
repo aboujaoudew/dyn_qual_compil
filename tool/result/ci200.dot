@@ -1,0 +1,49 @@
+digraph G{
+
+{node_1 [label="002"];
+node_2 [label="012"];
+node_3 [label="020"];
+node_4 [label="021"];
+node_5 [label="022"];
+node_6 [label="102"];
+node_7 [label="112"];
+node_8 [label="120"];
+node_9 [label="121"];
+node_10 [label="122"];
+node_11 [label="200"];
+node_12 [label="201"];
+node_13 [label="202"];
+node_14 [label="210"];
+node_15 [label="211"];
+node_16 [label="212"];
+node_17 [label="220"];
+node_18 [label="221"];
+node_19 [label="222"];
+}
+node_1->node_2[penwidth=1]
+node_3->node_4[penwidth=1]
+node_6->node_1[penwidth=1]
+node_7->node_2[penwidth=1]
+node_8->node_3[penwidth=1]
+node_8->node_9[penwidth=1]
+node_8->node_4[penwidth=1]
+node_9->node_4[penwidth=1]
+node_9->node_10[penwidth=1]
+node_9->node_5[penwidth=1]
+node_10->node_5[penwidth=1]
+node_11->node_12[penwidth=1]
+node_12->node_13[penwidth=1]
+node_12->node_6[penwidth=1]
+node_13->node_6[penwidth=1]
+node_14->node_15[penwidth=1]
+node_15->node_16[penwidth=1]
+node_15->node_7[penwidth=1]
+node_16->node_7[penwidth=1]
+node_17->node_8[penwidth=1]
+node_17->node_18[penwidth=1]
+node_17->node_9[penwidth=1]
+node_18->node_9[penwidth=1]
+node_18->node_19[penwidth=1]
+node_18->node_10[penwidth=1]
+node_19->node_10[penwidth=1]
+}
