@@ -16,6 +16,7 @@ The inputs of the tool are specified in the following files located in the folde
 
 The following command:
 - make 
+
 removes any output file, compile each model and translate all dot into pdf. The generated results (both .dot and .pdf files) are stored in the folder "case_studies/model/output_files" where "model" denotes the name of the model (here either "prozone" or "unary_vs_binary").
 
 It is also possible to decompose the computation of this script stepwise. 
