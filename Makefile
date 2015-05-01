@@ -10,7 +10,7 @@ MATLAB=matlab
 
 .PRECIOUS: $(PDF) $(DOT) $(OUTPUTREP)
 
-all: $(EXAMPLES)
+all: clean $(EXAMPLES)
 	@make -C . pdf 
 
 models: $(EXAMPLES)
@@ -20,7 +20,7 @@ pdf: $(PDF)
 	@mkdir $@
 
 %: $(MODELREP)% $(MODELREP)%/output_files
-	@cd $(MAINREP) ; rm -rf tmp.m ; echo "frontend('$@')" > tmp.m ; $(MATLAB) < tmp.m 
+	cd $(MAINREP) ; rm -rf tmp.m ; echo "frontend('$@')" > tmp.m ; $(MATLAB) < tmp.m 
 
 %.pdf: %.dot
 	@$(DOTENGINE) -Tpdf $< -o $@
@@ -29,7 +29,7 @@ clean:
 	@rm -rf $(OUTPUTREP)
 
 help:
-	@echo make: compile all the models and generate the corresponfing pdf
+	@echo make: compile all the models and generate the corresponding pdf
 	@echo make models: compile all models
 	@echo make pdf: convert each dot file into a pdf file 
 	@echo make prozone: compile the prozone model 
