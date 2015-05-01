@@ -20,7 +20,7 @@ pdf: $(PDF)
 	@mkdir $@
 
 %: $(MODELREP)% $(MODELREP)%/output_files
-	cd $(MAINREP) ; rm -rf tmp.m ; echo "frontend('$@')" > tmp.m ; $(MATLAB) < tmp.m 
+	@cd $(MAINREP) ; rm -rf tmp.m ; echo "frontend('$@')" > tmp.m ; $(MATLAB) < tmp.m 
 
 %.pdf: %.dot
 	@$(DOTENGINE) -Tpdf $< -o $@
