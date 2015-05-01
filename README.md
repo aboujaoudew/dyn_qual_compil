@@ -4,7 +4,9 @@ Author: Wassim Abou-Jaoudé
 Date:30 April 2015
 ------------------------------------------------------------------------------------------
 
-Matlab program for the automatic generation of dynamical qualitative models from reaction networks.
+Matlab program for the automatic generation of dynamical qualitative models from reaction networks. 
+
+(We plan to provide an Octave version very soon)
 
 The inputs of the tool are specified in the following files located in the folder "case_studies/model/input_files" (where 'model' denotes the name of the model, either "prozone" or "unary_vs_binary"):
 - init_cond.txt: initial conditions of the model;
