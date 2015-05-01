@@ -12,7 +12,7 @@
 %%% kin: vector of reaction rates
 %%% nb_val: number of sampling intervals
 
-function res = main_v1(ci,MMI_sign,v,kin,nb_val)
+function res = main_v1(ci,MMI_sign,v,kin,nb_val,model)
 
 %%Computation of the mass invariant
 MI = mass_invar(ci,MMI_sign);
@@ -71,7 +71,7 @@ res.ns = ns;
 
 ci = cell2mat(ci);
 
-backend(ci,S,P,FP);
+backend(ci,S,P,FP,model);
 
 function N = invar_check(MI, MMI_sign, x) 
 % N = 0: x is not in the invariant; N = 1: x is in the invariant

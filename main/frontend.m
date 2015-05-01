@@ -2,7 +2,7 @@ function frontend(model)
 %function res = frontend(model,init_cond,mass_invar)
 
 %file = strcat('.\input\',model,'\');
-file = strcat('./input/',model,'/');
+file = strcat('../case_studies/',model,'/input_files/');
 
 %%%========================================================================
 %%% Parsing of the model file to extract the reactions
@@ -166,7 +166,7 @@ res.var = var;
 res.i_c = i_c;
 res.MI = MI;
 
-main_v1(i_c,MI,v,kin,nb_val);
+main_v1(i_c,MI,v,kin,nb_val,model);
 
 
 % % Construction of the model from the text file
