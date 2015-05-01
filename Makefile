@@ -2,7 +2,7 @@ MAINREP=main/
 MODELREP=case_studies/
 EXAMPLES=$(notdir $(wildcard $(MODELREP)*))
 OUTPUTREP=$(wildcard $(MODELREP)*/output_files)
-DOT=$(wildcard $(OUTPUTREP)*/*.dot)
+DOT=$(wildcard $(MODELREP)*/output_files/*.dot)
 PDF=$(DOT:%.dot=%.pdf)
 
 DOTENGINE=dot
@@ -12,7 +12,6 @@ MATLAB=matlab
 
 all: $(EXAMPLES)
 	@make -C . pdf 
-
 
 models: $(EXAMPLES)
 pdf: $(PDF)
