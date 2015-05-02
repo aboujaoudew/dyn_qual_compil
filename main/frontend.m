@@ -7,7 +7,7 @@ file = strcat('../case_studies/',model,'/input_files/');
 %%%========================================================================
 %%% Parsing of the model file to extract the reactions
 %%%========================================================================
-fid = fopen(strcat(file,strcat(model),'_reactions.txt'));
+fid = fopen(strcat(file,'reactions.txt'));
 v = [];
 %var = [];
 tline = fgetl(fid);
@@ -40,7 +40,7 @@ fclose(fid);
 %%% Parsing of the variablels
 %%%========================================================================
 
-fid = fopen(strcat(file,strcat(model),'_reactions_alphabet.txt'));
+fid = fopen(strcat(file,'reactions_alphabet.txt'));
 var = [];
 tline = fgetl(fid);
 while ischar(tline)

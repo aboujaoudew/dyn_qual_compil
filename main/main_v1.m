@@ -68,7 +68,6 @@ for i = 1:nb_state
         size_d = size(d);
     end
 end
-
 S = cell2mat(S);
 
 res.S = S; % list of the admissible states (respecting the invariant mass constraints)
