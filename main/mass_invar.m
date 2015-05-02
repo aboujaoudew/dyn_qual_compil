@@ -11,5 +11,5 @@ for i = 1:size_MMI_sign(1)
 end
 MI = [];
 for i = 1:size_MMI_sign(1)
-    MI = [MI ; {fplus({b{i,:}})}];
+	  MI = concat_row_even_if_empty (MI,{fplus({b{i,:}})}) ;
 end

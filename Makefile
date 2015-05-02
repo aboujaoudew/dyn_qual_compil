@@ -6,7 +6,7 @@ DOT=$(wildcard $(MODELREP)*/output_files/*.dot)
 PDF=$(DOT:%.dot=%.pdf)
 
 DOTENGINE=dot
-MATLAB=matlab
+OPTION?=matlab
 
 .PRECIOUS: $(PDF) $(DOT) $(OUTPUTREP)
 
@@ -20,13 +20,16 @@ pdf: $(PDF)
 	@mkdir $@
 
 %: $(MODELREP)% $(MODELREP)%/output_files
-	@cd $(MAINREP) ; rm -rf tmp.m ; echo "frontend('$@')" > tmp.m ; $(MATLAB) < tmp.m 
+	@rm -rf $(MAINREP)$@_tmp.m 
+	@echo "frontend('$@')" > $(MAINREP)$@_tmp.m  
+	cd $(MAINREP) ; $(OPTION) < $@_tmp.m 
+	@rm $(MAINREP)$@_tmp.m
 
 %.pdf: %.dot
-	@$(DOTENGINE) -Tpdf $< -o $@
+	$(DOTENGINE) -Tpdf $< -o $@
 
 clean:
-	@rm -rf $(OUTPUTREP)
+	rm -rf $(OUTPUTREP)
 
 help:
 	@echo make: compile all the models and generate the corresponding pdf

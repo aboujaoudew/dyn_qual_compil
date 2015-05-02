@@ -25,26 +25,33 @@ B = unique(nchoosek(A,nb_var),'rows');
 B = num2cell(B);
 b = size(B);
 nb_state = b(1);
-
 %Computation of the next states
 FP = []; P = []; ns = 0; S = [];
 for i = 1:nb_state
     a = B(i,:); %state
     b = invar_check (MI, MMI_sign, a);
-
     if b == 0 % b is not in the invariant
     %elseif (cell2mat(a(6)) == 1 || cell2mat(a(6)) == 2)  %state filtering prozone case ci242000
     %elseif (cell2mat(a(3)) == 7 || (cell2mat(a(1)) >= 6 && cell2mat(a(3)) >= 1) )  %state filtering rescaling case ci700
     elseif b == 1
-        S = [S; a];
+        S = concat_row_even_if_empty(S,a);
         ns = ns + 1;
-        P = [P ; {cell2mat(a)} {-1}]; %list of states which are in the mass invariant
+        if length(P)==0
+	    P = [cell2mat(a) {-1}];
+        else 
+            P = [P;{cell2mat(a)} {-1}];
+        endif;
+%list of states which are in the mass invariant
         %Computation of the discrete propensity for each reaction
         b = next_states(a,v,nb_val,kin,ci); % 1st column: next states - 2nd column: associated propensities
         size_b = size(b);
         d = []; % matrix of next states
         if length(b) == 0
+	  if length(FP)==0
+	  FP = [{a} {length(S(:,1))}];
+	    else 
             FP = [FP; {a} {length(S(:,1))}]; %a has no successor so it is a fixed point
+	    endif; 
         else
             c = cell2mat(b(:,1)); %extraction of the state from b
             c = num2cell(c);
@@ -52,11 +59,12 @@ for i = 1:nb_state
                 cc = invar_check(MI, MMI_sign, c(j,:));
                 if cc == 0 %b is not in the invariant
                 else
-                    d = [d ; b(j,:)];
+		  d = concat_row_even_if_empty(d,b(j,:));
                 end
             end
         end
-        P = [P ; d; {-1} {-1}];
+	P = concat_row_even_if_empty(P,concat_row_even_if_empty(d,[{-1} {-1}]));
+%       P = [P ; d; {-1} {-1}];
         size_d = size(d);
     end
 end
@@ -96,7 +104,7 @@ M = prop_comp(x,v,kin); % 1st column: reaction index - 2nd column: associated pr
 %propensity of the reaction
 N = [];
 
-etat = cell2mat(x)
+etat = cell2mat(x);
 
 %--------------------------------------------------------------------------
 %Computation of the variables which are a product of a rule and a reactant
@@ -161,7 +169,7 @@ for i = 1: length(v) % loop on the reactions
                c = y;
                c(vvv_reac_ind) = y(vvv_reac_ind) - 1;
                c(vvv_prod_ind) = y(vvv_prod_ind) + 1;
-               P = [P; {c} M{i,2}];
+	       P = concat_row_even_if_empty(P,[{c} M{i,2}]);
                cell2mat(P);
             end    
         end   
@@ -169,9 +177,7 @@ for i = 1: length(v) % loop on the reactions
 %-------------------------------------------------------------------------
 %Suppression of the transitions which are forbidden by the interval
 %crossing constraint
-    
-    avant_supp_inter_cross = cell2mat(P);
-    
+  %    avant_supp_inter_cross = cell2mat(P);
     if length(P) > 0
         list_a = [];
         PP = cell2mat(P);
@@ -229,17 +235,23 @@ for i = 1: length(v) % loop on the reactions
         P(list_c,:) = []; %suppression of the transitions which violate the constraint
                       %on the crossing intervals
     end
-    
-    apres_supp_inter_cross = cell2mat(P);
-    
-    N = [N; P]; % on stocke les transitions permises dans N
+    if length(P) == 0 
+%       apres_supp_inter_cross = [];
+    else 
+       apres_supp_inter_cross = cell2mat(P);
+       N = concat_row_even_if_empty(N,P); % on stocke les transitions permises dans N
+    endif;
 end
 
 % if cell2mat(x) == [1 0 2]
 %     error('stop')
 % end
     
-avant_supp_prior = cell2mat(N);
+%if length(N) == 0 
+%		    avant_supp_prior = [];
+%  else 		   
+%avant_supp_prior = cell2mat(N);
+%endif
 
 %-------------------------------------------------------------------------
 %Suppression of the successor states of lower priorities
@@ -259,8 +271,11 @@ if ~isempty(N)
 end
 N(list,:) = [];
 
-apres_supp_prior = cell2mat(N);
-
+%if length(N)=0 
+%    apres_supp_prior = [];
+%  else 
+%apres_supp_prior = cell2mat(N);
+%endif
 %-------------------------------------------------------------------------
 if length(N)~=0
     for i = 1:length(N(:,1))
@@ -301,22 +316,22 @@ a = v{i}; % reaction i
         if prod(x_ind) == 0
             aa = [0 : sum(x_ind) + 1 + kin(i)];
             a = [min(aa),max(aa)];
-            M = [M; {i} {a}];
+	    M = concat_row_even_if_empty(M,[{i} {a}]);
         else
             aa = [sum(x_ind) + kin(i), sum(x_ind) + 1 + kin(i)];
             a = [min(aa),max(aa)];
-            M = [M; {i} {a}];
+	    M = concat_row_even_if_empty(M,[{i} {a}]);
         end
     elseif (length(ind) == 2 && length(unique(ind)) == 1) % bimolecular reaction of the form 2A ->*
         x_ind = [x{ind}];
         if prod(x_ind) ~= 0
             aa = [2*sum(x{ind})-1+kin(i), 2*sum(x{ind})+kin(i), 2*sum(x{ind})+kin(i)+1];
             a = [min(aa),max(aa)];
-            M = [M; {i} {a}];
+	    M = concat_row_even_if_empty(M,[{i} {a}]);
         else
             aa = [0 : kin(i) + 1];
             a = [min(aa),max(aa)];
-            M = [M; {i} {a}];
+	    M = concat_row_even_if_empty(M,[{i} {a}]);
         end 
     end
 

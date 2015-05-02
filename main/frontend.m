@@ -31,7 +31,7 @@ while ischar(tline)
         end
         [d, b] = strtok(b);
     end
-    v = [v , {a}];   % List of the reactions (parsed)
+    v = concat_col_even_if_empty(v,{a});   % List of the reactions (parsed)
     tline = fgetl(fid);
 end
 fclose(fid);
@@ -49,10 +49,11 @@ while ischar(tline)
         [d, b] = strtok(b);
     end
     b = strtrim(b);
-    var = [var {b}];
+    var = concat_col_even_if_empty(var,{b});
     tline = fgetl(fid);
 end
 fid(close);
+
 
 %%%========================================================================
 %%% Parsing of the initial conditions file
@@ -71,7 +72,7 @@ while ischar(tline)
     end
    % Parsing of the products
     [d, b] = strtok(b); % suppress the character '='        
-    i_c_pars = [i_c_pars; {a} {d}];
+    i_c_pars = concat_row_even_if_empty(i_c_pars,[a {d}]);
     tline = fgetl(fid);
 end
 
@@ -81,7 +82,7 @@ size_ic = size(i_c_pars);
 for i = 1: size_ic(1)
     b = i_c_pars{i,1};
     for k = 1:length(var)
-        c = [b, var(k)];
+        c = concat_row_even_if_empty(b,var(k));
         c = unique(c);
         if length(c) ==  1
             i_c(k) = str2num(i_c_pars{i,2});
@@ -91,6 +92,7 @@ for i = 1: size_ic(1)
 end
 i_c = num2cell(i_c);
 fclose(fid);
+
 
 %%%========================================================================
 %%% Parsing of the mass invariant file
@@ -105,24 +107,22 @@ while ischar(tline)
     a = [];
     while d ~= '='
         if d ~= '+' 
-            a = [a {d}];           
+           a = concat_col_even_if_empty (a,{d});
         end
         [d, b] = strtok(b); % b: character left after suppression of the firts character - d: first character
-    end
-    
+	end;
     if length(b) == 0
     else
         while length(b) ~= 0
             [d, b] = strtok(b);
             if d ~= '+'
-                a = [a {strcat('-',d)}];
+	      a = concat_col_even_if_empty(a,{strcat('-',d)});
             end
         end    
     end
-    MI_pars = [MI_pars; {a}];
+    MI_pars = concat_row_even_if_empty(MI_pars, {a});
     tline = fgetl(fid);
 end
-
 fclose(fid);
 
 %List of the mass invariants in the input format of the core program
@@ -133,14 +133,14 @@ for i = 1: size_MI(1)
     for j = 1:length(b)
         for k = 1:length(var)
             c = [];
-            c = [b(j), var(k)];
+            c = [b(j),var(k)];
             c = unique(c);
             if length(c) ==  1
                 MI(i,k) = 1;
                 break;
             else
-                c = [b(j), strcat('-',var(k))];
-                c = unique(c);
+	      c = [b(j), strcat('-',var(k))];
+              c = unique(c);
                 if length(c) ==  1
                     MI(i,k) = -1;
                     break;
