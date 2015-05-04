@@ -1,5 +1,13 @@
 function backend(ci,S,P,FP,model)
 
+%--------------------------------------------------------------------------
+%Creation of a folder "output_files", to stock the results, if it does not exist
+newSubFolder = strcat('../case_studies/',model,'/output_files/');
+if ~exist(newSubFolder, 'dir')
+  mkdir(newSubFolder);
+end
+%--------------------------------------------------------------------------
+
 size_S = size(S);
 a = [];
 for i=1:length(ci)

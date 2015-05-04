@@ -81,8 +81,11 @@ i_c = zeros(1,length(var));
 size_ic = size(i_c_pars);
 for i = 1: size_ic(1)
     b = i_c_pars{i,1};
-    for k = 1:length(var)
-        c = concat_row_even_if_empty(b,var(k));
+    for k = 1:length(var)        
+        
+        %c = concat_row_even_if_empty(b,var(k));
+        c = concat_row_even_if_empty({b},var(k));
+        
         c = unique(c);
         if length(c) ==  1
             i_c(k) = str2num(i_c_pars{i,2});
