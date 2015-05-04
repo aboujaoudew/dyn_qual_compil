@@ -7,6 +7,8 @@ PDF=$(DOT:%.dot=%.pdf)
 
 DOTENGINE=dot
 OPTION?=matlab
+PROZONE=$(notdir $(wildcard $(MODELREP)*prozone*))
+UNARY=$(notdir $(wildcard $(MODELREP)*unary_vs_binary*))
 
 .PRECIOUS: $(PDF) $(DOT) $(OUTPUTREP)
 
@@ -14,6 +16,9 @@ all: clean $(EXAMPLES)
 	@make -C . pdf 
 
 models: $(EXAMPLES)
+prozone: $(PROZONE)
+unary_vs_binary: $(UNARY)
+
 pdf: $(PDF)
 
 %/output_files:
