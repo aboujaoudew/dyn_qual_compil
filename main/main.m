@@ -439,6 +439,113 @@ cell2mat(trans_set_sing(:,[1 4 5]));
 
 res = state_quotienting(prod_ind, state_space, state_space_annot, trans_set_sing_prefilt, trans_set_sing, trans_set_reg);
 
+
+function res = reg_trans_filt(state, state_annot, succ_state)
+%Filtering of a regular transition + annotation of the allowed
+%successor of a regular transition
+
+%%% A non annotated variable is annotated after a regular transition if it 
+%%% is positively updated after the transition.
+%%% An annotated variable keeps annotated after a regular transition if it 
+%%% is not negatively updated after the transition.
+
+bool = 1;
+annot_succ = zeros(1,length(cell2mat(state)));
+
+%--------------------------------------------------------------------------
+%Filtering of the regular transition
+annot_var = find(cell2mat(state_annot));   %extraction of the indeces of the variables which are annotated
+delta = cell2mat(succ_state) - cell2mat(state);
+for i = 1:length(delta)
+    if delta(i) > 0
+        if length(intersect(i, annot_var)) ~= 0  % check whether the updated variable of index i is annotated
+            bool = 0; break;
+        end
+    end
+end
+
+%--------------------------------------------------------------------------
+%Annotation of the successor if the regular transition is allowed
+if bool == 1
+    b1 = []; b2 = [];
+    for i = 1:length(delta)
+        if delta(i) > 0
+            b1 = [b1, i]; %extraction of the indeces of the positively updated variables in the transition state -> succ_a
+        end
+    end
+
+    if length(annot_var) == 0
+    else
+        for i = 1: length(annot_var)
+            if delta(annot_var(i)) == 0
+                b2 = [b2, annot_var(i)]; %extraction of the indeces of the annotated variables which are not updated in the transition state -> succ_a
+            end
+        end
+    end
+    annot_succ(b1) = -1; annot_succ(b2) = -1;
+end
+
+res.a = bool;
+res.b = annot_succ;
+
+function res = sing_trans_filt(state, annot_state, annot_succ, react_for_a_prod, vect_reac)
+%Filtering of the singular transition according to the upwards crossing
+%interval constraint
+%HERE IS THE ENCODING OF THE APPROXIMATION OF THE UPWARDS CROSSING INTERVAL
+%CONSTRAINT
+
+bool = 1;
+num_state = cell2mat(state);
+num_annot_state = cell2mat(annot_state);
+num_annot_succ = cell2mat(annot_succ);
+
+mrp = max_resource_prod(state, react_for_a_prod, vect_reac);  %computation of the max of resources available for the production of each product (assuming none of the limiting reactants are product of a reaction) 
+
+index_updated_state = find(num_annot_state - num_annot_succ);
+a = find([cell2mat(mrp(:,1)) - index_updated_state] == 0);
+mrp_us = mrp(a,:);  %max ressource available for the production of the updated annotated product in the singular transition
+
+%--------------------------------------------------------------------------
+%Filtering of the singular transition (this encodes an approximation of the
+%parameter: escape#)
+products = cell2mat(react_for_a_prod(:,1)); %indeces of the products of the reaction network
+if length(intersect(cell2mat(mrp_us(3)), products)) == 0      %1st condition to suppress a singular transition: none of the reactants of min reactants value producing the updated annotated species are a product of a reaction
+    if num_state(cell2mat(mrp_us(1))) > cell2mat(mrp_us(2))   %2nd condition to suppress a singular transition: there is not enough resources for the updated annotated species to cross his interval upwards (i.e. to lose its annotation)
+        bool = 0;
+    end
+end
+
+res = bool;
+
+function res = max_resource_prod(state, react_for_a_prod, vect_reac)
+%Function which computes the resource available for the production of each
+%product at a given state, and the indeces of the reactants which equal the
+%min of the reactants of the reactions which produce each product
+res = [];
+for i = 1:length(react_for_a_prod(:,1))
+    %react_for_a_prod(i,1)
+    aa = cell2mat(react_for_a_prod(i,2)); %indeces of the reactions which produce the product of index: react_for_a_prod(i,1)
+    b = []; c = [];
+    for j = 1:length(aa)
+        vv = vect_reac{aa(j)};
+        vvv = unique(abs(vv(vv<0)));   %indeces of the reactants of the reaction vv{aa(j)}        
+        num_state = cell2mat(state);
+        b = [b, min(num_state(vvv))];  %vector of the min of the reactants of the reactions producing the product of index: react_for_a_prod(i,1)
+        for k = 1: length(vvv)
+            d = num_state(vvv);
+            if d(k) == min(d)
+                c = [c, vvv(k)];       %indeces of the reactants which equal the min of the reactants of the reactions producing the product of index i
+            end
+        end       
+    end
+    c = unique(c);
+    e = [react_for_a_prod(i,1), {max(b)}, {c}];
+    res = [res; e]; % 1st column: indeces of the products; 2nd column: maximum of the minimum of the reactant values over the reactions which produce the product of 1st column index ; 
+                    % 3rd column: indeces of the reactants which equal
+                    % the min of the reactants of the reactions producing
+                    % the product of 1st column index
+end
+
 %==========================================================================
 %QUOTIENTING OF ANNOTATED STATES
 %==========================================================================
@@ -601,107 +708,3 @@ cell2mat(trans_set_sing);
 
 res.ts = [trans_set_reg; trans_set_sing];
 res.ss = state_space_annot;
-
-function res = reg_trans_filt(state, state_annot, succ_state)
-%Filtering of a regular transition + annotation of the allowed
-%successor of a regular transition
-
-%%% A non annotated variable is annotated after a regular transition if it 
-%%% is positively updated after the transition.
-%%% An annotated variable keeps annotated after a regular transition if it 
-%%% is not negatively updated after the transition.
-
-bool = 1;
-annot_succ = zeros(1,length(cell2mat(state)));
-
-%--------------------------------------------------------------------------
-%Filtering of the regular transition
-annot_var = find(cell2mat(state_annot));   %extraction of the indeces of the variables which are annotated
-delta = cell2mat(succ_state) - cell2mat(state);
-for i = 1:length(delta)
-    if delta(i) > 0
-        if length(intersect(i, annot_var)) ~= 0  % check whether the updated variable of index i is annotated
-            bool = 0; break;
-        end
-    end
-end
-
-%--------------------------------------------------------------------------
-%Annotation of the successor if the regular transition is allowed
-if bool == 1
-    b1 = []; b2 = [];
-    for i = 1:length(delta)
-        if delta(i) > 0
-            b1 = [b1, i]; %extraction of the indeces of the positively updated variables in the transition state -> succ_a
-        end
-    end
-
-    if length(annot_var) == 0
-    else
-        for i = 1: length(annot_var)
-            if delta(annot_var(i)) == 0
-                b2 = [b2, annot_var(i)]; %extraction of the indeces of the annotated variables which are not updated in the transition state -> succ_a
-            end
-        end
-    end
-    annot_succ(b1) = -1; annot_succ(b2) = -1;
-end
-
-res.a = bool;
-res.b = annot_succ;
-
-function res = sing_trans_filt(state, annot_state, annot_succ, react_for_a_prod, vect_reac)
-%Filtering of the singular transition according to the upwards crossing
-%interval constraint
-
-bool = 1;
-num_state = cell2mat(state);
-num_annot_state = cell2mat(annot_state);
-num_annot_succ = cell2mat(annot_succ);
-
-mrp = max_resource_prod(state, react_for_a_prod, vect_reac);  %computation of the max of resources available for the production of each product (assuming none of the limiting reactants are product of a reaction) 
-
-index_updated_state = find(num_annot_state - num_annot_succ);
-a = find([cell2mat(mrp(:,1)) - index_updated_state] == 0);
-mrp_us = mrp(a,:);  %max ressource available for the production of the updated annotated product in the singular transition
-
-%--------------------------------------------------------------------------
-%Filtering of the singular transition (this encodes an approximation of the
-%parameter: escape#)
-products = cell2mat(react_for_a_prod(:,1)); %indeces of the products of the reaction network
-if length(intersect(cell2mat(mrp_us(3)), products)) == 0      %1st condition to suppress a singular transition: none of the reactants of min reactants value producing the updated annotated species are a product of a reaction
-    if num_state(cell2mat(mrp_us(1))) > cell2mat(mrp_us(2))   %2nd condition to suppress a singular transition: there is not enough resources for the updated annotated species to cross his interval upwards (i.e. to lose its annotation)
-        bool = 0;
-    end
-end
-
-res = bool;
-
-function res = max_resource_prod(state, react_for_a_prod, vect_reac)
-%Function which computes the resource available for the production of each
-%product at a given state, and the indeces of the reactants which equal the
-%min of the reactants of the reactions which produce each product
-res = [];
-for i = 1:length(react_for_a_prod(:,1))
-    %react_for_a_prod(i,1)
-    aa = cell2mat(react_for_a_prod(i,2)); %indeces of the reactions which produce the product of index: react_for_a_prod(i,1)
-    b = []; c = [];
-    for j = 1:length(aa)
-        vv = vect_reac{aa(j)};
-        vvv = unique(abs(vv(vv<0)));   %indeces of the reactants of the reaction vv{aa(j)}        
-        num_state = cell2mat(state);
-        b = [b, min(num_state(vvv))];  %vector of the min of the reactants of the reactions producing the product of index: react_for_a_prod(i,1)
-        for k = 1: length(vvv)
-            d = num_state(vvv);
-            if d(k) == min(d)
-                c = [c, vvv(k)];       %indeces of the reactants which equal the min of the reactants of the reactions producing the product of index i
-            end
-        end       
-    end
-    c = unique(c);
-    e = [react_for_a_prod(i,1), {max(b)}, {c}];
-    res = [res; e]; % 1st column: indeces of the products; 2nd column: maximum of the minimum of the reactant values over the reactions which produce the product of 1st column index ; 
-                    % 3rd column: indeces of the reactants which equal
-                    % the min of the reactants of the reactions producing
-                    % the product of 1st column index
-end
