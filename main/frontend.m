@@ -1,4 +1,5 @@
 function frontend(model)
+clc
 %function res = frontend(model,init_cond,mass_invar)
 
 %file = strcat('.\input\',model,'\');
@@ -169,7 +170,14 @@ res.var = var;
 res.i_c = i_c;
 res.MI = MI;
 
-main_v1(i_c,MI,v,kin,nb_val,model);
+%main_v1(i_c,MI,v,kin,nb_val,model);
+%main_v2(i_c,MI,v,kin,nb_val,model);
+%main_v3(i_c,MI,v,kin,nb_val,model);
+%main_v4(i_c,MI,v,kin,nb_val,model);
+%main_v5(i_c,MI,v,kin,nb_val,model);
+%main_v6(i_c,MI,v,kin,nb_val,model);
+main(i_c,MI,v,kin,nb_val,model);
+
 
 
 % % Construction of the model from the text file

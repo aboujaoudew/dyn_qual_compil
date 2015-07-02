@@ -2,8 +2,6 @@
 %%% constraint without lattence.
 %%% We take into account the constraints of the mass invariants.
 %%% The updating policy is the full asynchronous policy (i.e. we take into account all types of updatings).
-%%% WE IMPLEMENTED A FIRST VERSION FOR THE UPWARDS INTERVAL CROSSING CONSTRAINT WHICH HAS TO BE
-%%% UPDATED.
 
 %%% INPUTS
 %%% v: vector of reactions
@@ -12,7 +10,7 @@
 %%% kin: vector of reaction rates
 %%% nb_val: number of sampling intervals
 
-function res = main_v1(ci,MMI_sign,v,kin,nb_val,model)
+function res = main_v2(ci,MMI_sign,v,kin,nb_val,model)
 
 %%Computation of the mass invariant
 MI = mass_invar(ci,MMI_sign);
@@ -25,85 +23,6 @@ B = unique(nchoosek(A,nb_var),'rows');
 B = num2cell(B);
 b = size(B);
 nb_state = b(1);
-%Computation of the next states
-FP = []; P = []; ns = 0; S = [];
-for i = 1:nb_state
-    a = B(i,:); %state
-    b = invar_check (MI, MMI_sign, a);
-    if b == 0 % b is not in the invariant
-    %elseif (cell2mat(a(6)) == 1 || cell2mat(a(6)) == 2)  %state filtering prozone case ci242000
-    %elseif (cell2mat(a(3)) == 7 || (cell2mat(a(1)) >= 6 && cell2mat(a(3)) >= 1) )  %state filtering rescaling case ci700
-    elseif b == 1        
-        S = concat_row_even_if_empty(S,a);
-        ns = ns + 1;
-        if length(P) == 0
-            P = [{cell2mat(a)} {-1}];
-        else 
-            P = [P;{cell2mat(a)} {-1}];
-        end;
-        %list of states which are in the mass invariant
-        %Computation of the discrete propensity for each reaction
-        b = next_states(a,v,nb_val,kin,ci); % 1st column: next states - 2nd column: associated propensities
-        size_b = size(b);
-        d = []; % matrix of next states
-        if length(b) == 0
-            if length(FP)==0
-                FP = [{a} {length(S(:,1))}];
-            else
-                FP = [FP; {a} {length(S(:,1))}]; %a has no successor so it is a fixed point
-            end; 
-        else
-            c = cell2mat(b(:,1)); %extraction of the state from b
-            c = num2cell(c);
-            for j = 1:size_b(1)
-                cc = invar_check(MI, MMI_sign, c(j,:));
-                if cc == 0 %b is not in the invariant
-                else
-                    d = concat_row_even_if_empty(d,b(j,:));
-                end    
-            end
-        end
-        P = concat_row_even_if_empty(P,concat_row_even_if_empty(d,[{-1} {-1}]));
-        %P = [P ; d; {-1} {-1}];
-        size_d = size(d);
-    end    
-end
-S = cell2mat(S);
-
-res.S = S; % list of the admissible states (respecting the invariant mass constraints)
-res.P = P; % list of the admissible states and their successors
-res.FP = FP;
-res.ns = ns;
-
-
-ci = cell2mat(ci);
-
-backend(ci,S,P,FP,model);
-
-function N = invar_check(MI, MMI_sign, x) 
-% N = 0: x is not in the invariant; N = 1: x is in the invariant
-N = 1;
-a = mass_invar(x,MMI_sign);
-for i = 1:length(MI)
-    b = intersect(a{i},MI{i});
-    if length(b) ~= 0 % at least one element of a{i} is contained in MI{i}
-    else
-        N = 0;
-        break        
-    end
-end
-
-function N = next_states(x,v,nb_val,kin,ci)
-    
-%%Computation of the propensities of the reactions
-M = prop_comp(x,v,kin); % 1st column: reaction index - 2nd column: associated propensity
-
-%Computation of the next states of state y: we consider an asynchronous
-%policy between the variables of a reaction. The transitions are labeled with the
-%propensity of the reaction
-N = [];
-
-etat = cell2mat(x);
 
 %--------------------------------------------------------------------------
 %Computation of the variables which are a product of a rule and a reactant
@@ -125,6 +44,116 @@ end
 reac_ind = unique(reac_ind);
 prod_ind = unique(prod_ind);
 intersec_reac_prod = intersect(reac_ind, prod_ind);
+
+%--------------------------------------------------------------------------
+%Generation of the annotation space
+
+An_sp = [];
+
+%%Indeces of the variables which are not products (these variables cannot
+%%be (-) annotated)
+a = 1:nb_var;
+a(prod_ind) = [];
+ind_not_prod = a;
+
+%%Generation of the annotation space
+A = repmat(-1:0,1,nb_var);
+B_annot = nchoosek(A,nb_var);
+B_annot(:,ind_not_prod) = 0;
+B_annot = unique(B_annot,'rows');
+
+%--------------------------------------------------------------------------
+%Computation of the next states
+FP = []; P = []; ns = 0; S = [];
+for i = 1:nb_state
+    a = B(i,:); %state
+    b = invar_check (MI, MMI_sign, a);
+    if b == 0 % b is not in the invariant
+    %elseif (cell2mat(a(6)) == 1 || cell2mat(a(6)) == 2)  %state filtering prozone case ci242000
+    %elseif (cell2mat(a(3)) == 7 || (cell2mat(a(1)) >= 6 && cell2mat(a(3)) >= 1) )  %state filtering rescaling case ci700
+    elseif b == 1        
+        S = concat_row_even_if_empty(S,a);
+        ns = ns + 1;
+        if length(P) == 0
+            P = [{cell2mat(a)} {-1} {-1}];
+        else 
+            P = [P;{cell2mat(a)} {-1} {-1}];
+        end;
+        %list of states which are in the mass invariant
+        %Computation of the discrete propensity for each reaction
+        b = next_states(a,v,nb_val,kin,ci,intersec_reac_prod); % 1st column: next states - 2nd column: associated propensities
+        size_b = size(b);
+        d = []; % matrix of next states
+        if length(b) == 0
+            if length(FP)==0
+                FP = [{a} {length(S(:,1))}];
+            else
+                FP = [FP; {a} {length(S(:,1))}]; %a has no successor so it is a fixed point
+            end; 
+        else
+            c = cell2mat(b(:,1)); %extraction of the state from b
+            c = num2cell(c);
+            for j = 1:size_b(1)
+                cc = invar_check(MI, MMI_sign, c(j,:));
+                if cc == 0 %b is not in the invariant
+                else
+                    d = concat_row_even_if_empty(d,b(j,:));
+                end
+            end
+        end
+        %------------------------------------------------------------------
+        %Computation of the successors allowed by the upwards crossing interval
+        %constraint of all the combinations of annotated states authorised 
+        %by the mass invariant constraint
+        
+        
+        %TO COMPLETE
+        
+        %------------------------------------------------------------------
+
+        P = concat_row_even_if_empty(P,concat_row_even_if_empty(d,[{-1} {-1} {-1}]));
+        %P = [P ; d; {-1} {-1}];
+        size_d = size(d);
+    end    
+end
+
+P(:,end) = []; %suppression of the last column corresponding to reaction associated to a transition
+P
+S = cell2mat(S);
+
+res.S = S; % list of the admissible states (respecting the invariant mass constraints)
+res.P = P; % list of the admissible states and their successors
+res.FP = FP;
+res.ns = ns;
+
+ci = cell2mat(ci);
+
+backend(ci,S,P,model);
+
+function N = invar_check(MI, MMI_sign, x) 
+% N = 0: x is not in the invariant; N = 1: x is in the invariant
+N = 1;
+a = mass_invar(x,MMI_sign);
+for i = 1:length(MI)
+    b = intersect(a{i},MI{i});
+    if length(b) ~= 0 % at least one element of a{i} is contained in MI{i}
+    else
+        N = 0;
+        break        
+    end
+end
+
+function N = next_states(x,v,nb_val,kin,ci,intersec_reac_prod)
+    
+%%Computation of the propensities of the reactions
+M = prop_comp(x,v,kin); % 1st column: reaction index - 2nd column: associated propensity
+
+%Computation of the next states of state y: we consider an asynchronous
+%policy between the variables of a reaction. The transitions are labeled with the
+%propensity of the reaction
+N = [];
+
+etat = cell2mat(x);
 
 %--------------------------------------------------------------------------
 
@@ -171,10 +200,10 @@ for i = 1: length(v) % loop on the reactions
                
                %P, [{c} {M{i,2}}]
                %P = concat_row_even_if_empty(P,[{c} M{i,2}]);
-               P = concat_row_even_if_empty(P,[{c} {M{i,2}}]);
-               
-               cell2mat(P);
-            end    
+               P = concat_row_even_if_empty(P,[{c} {M{i,2}} {v{i}}]);               
+
+               cell2mat(P);               
+            end
         end   
     end
 %-------------------------------------------------------------------------
@@ -183,8 +212,10 @@ for i = 1: length(v) % loop on the reactions
   %    avant_supp_inter_cross = cell2mat(P);
     if length(P) > 0
         list_a = [];
-        PP = cell2mat(P);
-        PP = PP(:,1:end-2); %suppression of the last 2 columns of NN which correspond to the min and max of the propensities
+        PP = P;
+        PP(:,end-1:end) = []; %suppression of the last 2 columns of P which correspond to the propensities and the reactions
+
+        PP = cell2mat(PP);
         size_P = size(P);
         cii = cell2mat(ci);
         y = cell2mat(x);
@@ -260,7 +291,8 @@ end
 %Suppression of the successor states of lower priorities
 list = [];
 if ~isempty(N)
-    NN = cell2mat(N);
+    NN = N(:,2); %extraction of the column which stores the min and max of the propensities
+    NN = cell2mat(NN);
     size_N = size(N);
     for i = 1:size_N(1)
         for j = 1:size_N(1)
@@ -280,9 +312,10 @@ N(list,:) = [];
 %apres_supp_prior = cell2mat(N);
 %end
 %-------------------------------------------------------------------------
+%Setting of the propensities to 1
 if length(N)~=0
     for i = 1:length(N(:,1))
-        N{i,end} = 1;
+        N{i,2} = 1;
     end
 end
 

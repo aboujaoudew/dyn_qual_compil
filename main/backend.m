@@ -1,4 +1,4 @@
-function backend(ci,S,P,FP,model)
+function backend(ci, state_space, trans_set, model)
 
 %--------------------------------------------------------------------------
 %Creation of a folder "output_files", to stock the results, if it does not exist
@@ -8,7 +8,9 @@ if ~exist(newSubFolder, 'dir')
 end
 %--------------------------------------------------------------------------
 
-size_S = size(S);
+size_S = size(state_space);
+ss = cell2mat(state_space);
+
 a = [];
 for i=1:length(ci)
     a = strcat(a,int2str(ci(i)));
@@ -20,71 +22,49 @@ fprintf(fid, '%s', '{');
 
 for i = 1:size_S(1)
     fprintf(fid, '%s', strcat('node_',int2str(i),' [label="'));
-    for j = 1:size_S(2)
-        fprintf(fid, '%s', int2str(S(i,j)));
+    a = zeros(1,size_S(2)/2) + 1;
+    b = ss(i,:);
+    if b(end - size_S(2)/2 + 1:end) - a == 0
+        b = ss(i, 1:size_S(2)/2);
     end
-    fprintf(fid,'%s\n','"];');    
+    for j = 1:length(b)
+        fprintf(fid, '%s', int2str(b(j)));
+    end
+    fprintf(fid,'%s\n','"];');
 end
 
 fprintf(fid, '%s\n', '}');
 
-Q = P; 
+%cell2mat(trans_set(:,1:2))
 
-%Replacement of the following propensities: [0 1] -> 0.5 - [0 1 2] -> 1 - [0 1 2 3] -> 1.5 
+for i = 1:length(trans_set(:,1))
+    i;
+    %cell2mat(trans_set(i,1))
+    for j = 1:size_S(1)
+        %ss(j,:)
+        if cell2mat(trans_set(i,1)) - ss(j,:) == 0   
 
-size_Q = size(Q); 
-n = size_Q(1);
-a = 0;
-while n ~= 0
-    a = a + 1;
-    k = 0; b = [];
-    for i = 2:100
-        if Q{i,1} ~= -1
-            for j = 1:size_S(1)
-                if cell2mat(Q(i,1)) - S(j,:) == 0
-                    if cell2mat(Q(i,2)) == 0
-                        % fprintf(fid, '%s\n', strcat('node_',int2str(a),'->',...
-                        % 'node_', int2str(j),'[penwidth=',int2str(1),'; style=dashed]')); % 0 -> dashed
-                    break;
-                    elseif cell2mat(Q(i,2)) == 1
-                        fprintf(fid, '%s\n', strcat('node_',int2str(a),'->',...
-                        'node_', int2str(j),'[penwidth=',int2str(cell2mat(Q(i,2))),']')); % 1 -> 1
-                    break;
-                    elseif cell2mat(Q(i,2)) == 2
-                        fprintf(fid, '%s\n', strcat('node_',int2str(a),'->',...
-                        'node_', int2str(j),'[penwidth=',int2str(cell2mat(Q(i,2))),']')); % 2 -> 2
-                    break;
-                    elseif cell2mat(Q(i,2)) == 3
-                        fprintf(fid, '%s\n', strcat('node_',int2str(a),'->',...
-                        'node_', int2str(j),'[penwidth=',int2str(cell2mat(Q(i,2))),']')); % 3 -> 3
-                    break;
-                    elseif length(cell2mat(Q(i,2))) == 2    
-                        if cell2mat(Q(i,2)) == [0 1]
-                            fprintf(fid, '%s\n', strcat('node_',int2str(a),'->',...
-                            'node_', int2str(j),'[penwidth=',int2str(0.5),']')); % [0 1] -> 0.5
-                            break;
-                        end
-                    elseif length(cell2mat(Q(i,2))) == 3    
-                        if cell2mat(Q(i,2)) == [0 1 2]
-                            fprintf(fid, '%s\n', strcat('node_',int2str(a),'->',...
-                            'node_', int2str(j),'[penwidth=',int2str(1),']')); % [0 1 2] -> 1
-                            break;
-                        end
-                    elseif length(cell2mat(Q(i,2))) == 4    
-                        if cell2mat(Q(i,2)) == [0 1 2 3]
-                            fprintf(fid, '%s\n', strcat('node_',int2str(a),'->',...
-                            'node_', int2str(j),'[penwidth=',int2str(1.5),']')); % [0 1 3] -> 1.5
-                            break;
-                        end    
-                    end
-                end
-            end
-            k = k + 1;
+            a = strcat('node_',int2str(j),'->');
+            
+            break;
         else
-            Q(1:k+2,:) = []; m = size(Q); n = m(1);
+        end
+        
+    end
+    
+    for j = 1:size_S(1)
+        j;
+        cell2mat(trans_set(i,2)) - ss(j,:);
+        
+        if cell2mat(trans_set(i,2)) - ss(j,:) == 0          
+            b = strcat('node_', int2str(j),'[penwidth=','1',']');
             break;
         end
+        
     end
+   
+    fprintf(fid, '%s\n', strcat(a,b));
+    
 end
 
 % % Positioning the steady state at the bottom of the graph
