@@ -62,12 +62,12 @@ state_space = res.ss;
 trans_set = res.ts;
 disp('refinement with mass invariant done')
 
-%--------------------------------------------------------------------------
-%Computation of the set of transitions refined with scale separation
-trans_set = trans_set_scalesep(trans_set, vect_reac, kin);
-disp('refinement with scale separation done')
+% %--------------------------------------------------------------------------
+% %Computation of the set of transitions refined with scale separation
+% trans_set = trans_set_scalesep(trans_set, vect_reac, kin);
+% disp('refinement with scale separation done')
 
-%%--------------------------------------------------------------------------
+%--------------------------------------------------------------------------
 %Computation of the set of transitions refined with the upwards crossing
 %interval constraint
 res = trans_set_upcrossint(state_space, trans_set, prod_ind, vect_reac);

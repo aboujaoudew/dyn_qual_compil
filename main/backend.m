@@ -15,7 +15,7 @@ a = [];
 for i=1:length(ci)
     a = strcat(a,int2str(ci(i)));
 end
-fid = fopen(strcat('../case_studies/',model,'/output_files/','ci',a,'.dot'), 'wt');
+fid = fopen(strcat('../case_studies/',model,'/output_files/','ci',a,'mi_uci.dot'), 'wt');
 
 fprintf(fid, '%s\n\n', 'digraph G{');
 fprintf(fid, '%s', '{');
@@ -24,9 +24,9 @@ for i = 1:size_S(1)
     fprintf(fid, '%s', strcat('node_',int2str(i),' [label="'));
     a = zeros(1,size_S(2)/2) + 1;
     b = ss(i,:);
-    if b(end - size_S(2)/2 + 1:end) - a == 0
-        b = ss(i, 1:size_S(2)/2);
-    end
+     if b(end - size_S(2)/2 + 1:end) - a == 0
+         b = ss(i, 1:size_S(2)/2);
+     end
     for j = 1:length(b)
         fprintf(fid, '%s', int2str(b(j)));
     end
